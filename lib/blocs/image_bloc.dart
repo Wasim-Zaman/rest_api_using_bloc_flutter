@@ -11,9 +11,10 @@ class ImageBloc extends Bloc<ImageEvents, ImageStates> {
   ImageBloc() : super(ImageLoadingState()) {
     const url = 'https://jsonplaceholder.typicode.com/photos';
     List<ImagesModel> images = [];
-    on<ImageLoadingEvent>((event, emit) async {
+    on<ImageLoadedEvent>((event, emit) async {
       try {
         final response = await http.get(Uri.parse(url));
+        print(json.decode(response.body));
         if (response.statusCode == 200) {
           final List<dynamic> data = json.decode(response.body);
           data.forEach((element) {

@@ -19,26 +19,34 @@ class HomePage extends StatelessWidget {
           Expanded(
             child: BlocConsumer<ImageBloc, ImageStates>(
               builder: (context, state) {
-                return ListView.builder(
-                  itemBuilder: (context, index) {
-                    if (state is ImageLoadingState) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
+                if (state is ImageExceptionState) {
+                  return Center(
+                    child: Text(state.message),
+                  );
+                }
+                if (state is ImageLoadedState) {
+                  return ListView.builder(
+                    itemCount: state.images.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading:
+                            Image.network(state.images[index].thumbnailUrl!),
+                        title: Text(state.images[index].title!),
                       );
-                    } else if (state is ImageExceptionState) {
-                      return Center(
-                        child: Text(state.message),
-                      );
-                    } else if (state is ImageLoadedState) {
-                      return Image.network(state.images[index].url!);
-                    }
-                    return const SizedBox();
-                  },
-                  itemCount:
-                      state is ImageLoadedState ? state.images.length : 0,
-                );
+                    },
+                  );
+                }
+                return const CircularProgressIndicator();
               },
-              listener: (context, state) {},
+              listener: (context, state) {
+                if (state is ImageExceptionState) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.message),
+                    ),
+                  );
+                }
+              },
             ),
           ),
         ],

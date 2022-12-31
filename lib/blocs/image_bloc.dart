@@ -8,14 +8,6 @@ class ImageBloc extends Bloc<ImageEvents, ImageStates> {
   final ImageRepository imageRepository;
 
   ImageBloc(this.imageRepository) : super(ImageLoadingState()) {
-    // on<ImageLoadingEvent>((event, emit) async {
-    //   try {
-    //     final images = await imageRepository.getModel();
-    //     emit(ImageLoadedState(images));
-    //   } catch (e) {
-    //     emit(ImageExceptionState(e.toString()));
-    //   }
-    // });
     on<ImageLoadingEvent>((event, emit) => emit(ImageLoadingState()));
     on<ImageExceptionEvent>(
         (event, emit) => emit(ImageExceptionState('Error Occured!')));
